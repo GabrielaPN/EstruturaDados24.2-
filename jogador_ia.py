@@ -35,8 +35,8 @@ class JogadorIA(Jogador):
                 return jogada
 
             #R3.Se o quadrado central estiver livre, marque-o:
-            #if (1,1) in lista: #se a posicao central esta contida nas casas disponiveis 
-             #   return (1,1)
+            if (1,1) in lista: #se a posicao central esta contida nas casas disponiveis 
+                return (1,1)
             
             p = randint(0, len(lista)-1)
             return lista[p]
