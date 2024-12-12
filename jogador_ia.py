@@ -11,13 +11,13 @@ class JogadorIA(Jogador):
 
     def getJogada(self) -> (int, int):
         lista = []
-        for l in range(0,3): #percorre linha, l é a variavel que contem a linha atua do loop
+        for l in range(0,3): #percorre linha, l é a variavel que contem a linha atual do loop
             for c in range(0,3): #percorre coluna
                 if self.matriz[l][c] == Tabuleiro.DESCONHECIDO: #verifica se a casa atual, com base em l e c, esta disponivel
                     lista.append((l, c))
                     
         if(len(lista) > 0): #verifica se o comprimento da lista e maior que 0
-            #R1.Checar marcacoes em sequencia
+            #R1.Checar marcacoes em sequencia e marcar o quadrado restante
             jogada = self.verifica_jogada_vertical(Tabuleiro.JOGADOR_0)
             if jogada != None:
                 return jogada
@@ -25,10 +25,18 @@ class JogadorIA(Jogador):
             jogada = self.verifica_jogada_vertical(Tabuleiro.JOGADOR_X)
             if jogada != None:
                 return jogada
+            
+            jogada = self.verifica_jogada_horizontal(Tabuleiro.JOGADOR_0)
+            if jogada != None:
+                return jogada
+            
+            jogada = self.verifica_jogada_horizontal(Tabuleiro.JOGADOR_X)
+            if jogada != None:
+                return jogada
 
             #R3.Se o quadrado central estiver livre, marque-o:
-            if (1,1) in lista: #se a posicao central esta contida nas casas disponiveis 
-                return (1,1)
+            #if (1,1) in lista: #se a posicao central esta contida nas casas disponiveis 
+             #   return (1,1)
             
             p = randint(0, len(lista)-1)
             return lista[p]
@@ -60,15 +68,18 @@ class JogadorIA(Jogador):
 
         for coluna in range(0,3):
             casas_marcadas = 0
-            casas_disponiveis = [(coluna,0),(coluna,1),(coluna,2)]
+            casas_disponiveis = [(0, coluna),(1, coluna),(2, coluna)]
             
             for linha in range(0,3):
                 if self.matriz[linha][coluna] == tipo_jogador:
                     casas_marcadas +=1
-                    item_remover = (coluna, linha)
+                    item_remover = (linha, coluna)
                     casas_disponiveis = list(filter(lambda x: x != item_remover, casas_disponiveis))
+                
                 print (casas_disponiveis)
-                if (casas_marcadas == 2 and Tabuleiro.DESCONHECIDO in self.matriz[linha] ):
+                
+                #Verifica se tem duas casas marcadas e uma disponivel na coluna
+                if (casas_marcadas == 2 and Tabuleiro.DESCONHECIDO in [self.matriz[coluna] for i in range(0,3)] ):
                         jogada = casas_disponiveis[0]
                         break
         
