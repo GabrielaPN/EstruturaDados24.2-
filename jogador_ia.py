@@ -33,10 +33,26 @@ class JogadorIA(Jogador):
             jogada = self.verifica_jogada_horizontal(Tabuleiro.JOGADOR_X)
             if jogada != None:
                 return jogada
+            
+            jogada = self.verifica_jogada_diagonal(Tabuleiro.JOGADOR_0)
+            if jogada != None:
+                return jogada
+            
+            jogada = self.verifica_jogada_diagonal(Tabuleiro.JOGADOR_X)
+            if jogada != None:
+                return jogada
+
+            #R2.Se houver uma jogada que crie duas sequencias de marcacoes
 
             #R3.Se o quadrado central estiver livre, marque-o:
             if (1,1) in lista: #se a posicao central esta contida nas casas disponiveis 
-                return (1,1)
+               return (1,1)
+            
+            #R4.Se o jogador tiver marcado um dos cantos marcar o canto oposto
+
+            #R5.Se houver um canto vazio marcar
+
+            #R6.Marcar arbitrariamente um canto vazio
             
             p = randint(0, len(lista)-1)
             return lista[p]
@@ -85,4 +101,27 @@ class JogadorIA(Jogador):
         
         if jogada != None:
             return jogada
+        
+    def verifica_jogada_diagonal(self, tipo_jogador):
+        #Verificando a diagonal principal
+        casas_marcadas = 0
+        casas_disponiveis = [(0,0), (1,1), (2,2)]
+        for i in range(0,3):
+            if self.matriz[i][i] == tipo_jogador:
+                casas_marcadas +=1
+                casas_disponiveis.remove((i, i))
+        if casas_marcadas == 2 and any(self.matriz[i][i] == Tabuleiro.DESCONHECIDO for i in range(0,3)):
+            return casas_disponiveis[0]
+        
+        # Diagonal secundária
+        casas_marcadas = 0
+        casas_disponiveis = [(0, 2), (1, 1), (2, 0)]
+        for i in range(3):
+            if self.matriz[i][2 - i] == tipo_jogador:
+                casas_marcadas += 1
+                casas_disponiveis.remove((i, 2 - i))
+        if casas_marcadas == 2 and any(self.matriz[i][2 - i] == Tabuleiro.DESCONHECIDO for i in range(3)):
+            return casas_disponiveis[0]
+
+        return None
         
